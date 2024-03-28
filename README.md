@@ -6,6 +6,8 @@ High Performance Quad Tree Implementations for C# (Point, Rect and PointInv).
 
 NuGet packages published for dotnetcore 3.1
 
+![Alt text](Assets/QuadTrees/Example/RectExample.gif)
+
 ## Example
 
 ```

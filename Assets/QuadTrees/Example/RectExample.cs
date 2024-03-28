@@ -3,6 +3,7 @@ using QuadTrees.QTreeRectF;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using UnityEditor;
 using UnityEngine;
 using Color = UnityEngine.Color;
 
@@ -31,11 +32,11 @@ public class RectExample : MonoBehaviour
     [Header("single unit height")]
     public float height = 10;
 
-    [Header("quad tree center position of x axis")]
-    public float centerX;
+    [Header("quad tree left bottom position of x axis")]
+    public float leftBottomX;
 
-    [Header("quad tree center position of z axis")]
-    public float centerZ;
+    [Header("quad tree left bottom position of z axis")]
+    public float leftBottomZ;
 
     [Header("unit count in direction of x axis")]
     public int xCount = 10;
@@ -50,11 +51,14 @@ public class RectExample : MonoBehaviour
     private QuadTreeRectF<QTreeObject> qtree;
     private List<QTreeObject> visiableQTreeObjects;
 
+    private GUIStyle handleLabelStyle;
+
     // Start is called before the first frame update
     void OnEnable()
     {
         visiableQTreeObjects = new List<QTreeObject>();
-        qtree = new QuadTreeRectF<QTreeObject>(new RectangleF(centerX, centerZ, xCount * width, zCount * height));
+        // RectangleF constructor's x and y are left-bottom coordinate system.
+        qtree = new QuadTreeRectF<QTreeObject>(new RectangleF(leftBottomX, leftBottomZ, xCount * width, zCount * height));
 
         var unitId = 0;
         for (int i = 0; i < xCount; i++)
@@ -67,12 +71,19 @@ public class RectExample : MonoBehaviour
         }
 
         moveableGo.transform.localScale = new Vector3(moveableGoXSize, 1, moveableGoZSize);
+
+        handleLabelStyle = new GUIStyle();
+        handleLabelStyle.fontSize = 18;
+        handleLabelStyle.fontStyle = FontStyle.Bold;
+        handleLabelStyle.normal.textColor = Color.red;
     }
 
     // Update is called once per frame
     void Update()
     {
-        qtree.GetObjects(new RectangleF(moveableGo.transform.position.x, moveableGo.transform.position.z, moveableGoXSize, moveableGoZSize), visiableQTreeObjects);
+        var leftBottomXPos = moveableGo.transform.position.x - 0.5f * moveableGoXSize;
+        var leftBottomZPos = moveableGo.transform.position.z - 0.5f * moveableGoZSize;
+        qtree.GetObjects(new RectangleF(leftBottomXPos, leftBottomZPos, moveableGoXSize, moveableGoZSize), visiableQTreeObjects);
     }
 
     void OnDrawGizmos()
@@ -88,13 +99,16 @@ public class RectExample : MonoBehaviour
                 if (visible.id == rect.id)
                     continue;
             }
-            Gizmos.DrawWireCube(new Vector3(rect.Rect.X, 0, rect.Rect.Y), new Vector3(rect.Rect.Width, 1, rect.Rect.Height));
+            var pos = new Vector3(rect.Rect.X + 0.5f * rect.Rect.Width, 0, rect.Rect.Y + 0.5f * rect.Rect.Height);
+            Gizmos.DrawWireCube(pos, new Vector3(rect.Rect.Width, 1, rect.Rect.Height));
+            Handles.Label(pos, rect.id.ToString(), handleLabelStyle);
         }
 
         Gizmos.color = Color.green;
         foreach (var rect in visiableQTreeObjects)
         {
-            Gizmos.DrawWireCube(new Vector3(rect.Rect.X, 0, rect.Rect.Y), new Vector3(rect.Rect.Width, 1, rect.Rect.Height));
+            var pos = new Vector3(rect.Rect.X + 0.5f * rect.Rect.Width, 0, rect.Rect.Y + 0.5f * rect.Rect.Height);
+            Gizmos.DrawWireCube(pos, new Vector3(rect.Rect.Width, 1, rect.Rect.Height));
         }
     }
 }

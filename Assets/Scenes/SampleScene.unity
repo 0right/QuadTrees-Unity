@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -332,10 +332,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 10
   height: 10
-  centerX: 0
-  centerZ: 0
-  xCount: 10
-  zCount: 10
+  leftBottomX: 0
+  leftBottomZ: 0
+  xCount: 4
+  zCount: 4
   moveableGo: {fileID: 2096410184}
   moveableGoXSize: 15
   moveableGoZSize: 15
